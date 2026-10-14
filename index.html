@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Squada+One&family=Rubik:ital,wght@0,300;0,400;0,500;0,700;0,800;1,400&family=Permanent+Marker&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="img/menu/combo-familia.jpg">
-<link rel="stylesheet" href="styles.css?v=1">
+<link rel="stylesheet" href="styles.css?v=2">
 </head>
 <body>
 
@@ -55,6 +55,7 @@
 </svg>
 
 <div class="grain" aria-hidden="true"></div>
+<div class="trip" aria-hidden="true"><span></span></div>
 <div class="cursor" aria-hidden="true"></div>
 <div class="peek" aria-hidden="true"><img alt=""></div>
 
@@ -100,30 +101,29 @@
   <div class="hero-bg"><img src="img/menu/combo-familia.jpg" alt="" fetchpriority="high"></div>
   <div class="hero-shade"></div>
 
-  <div class="hero-hud" aria-hidden="true">
-    <span class="hud-km"><b class="hud-dot"></b>Rota DZE7 · KM 139</span>
-    <span data-open-hud>Ter → Dom · 16h—23h</span>
-    <span class="dim">Vila Formosa · Zona Leste · SP</span>
-    <span class="dim">Burgers · Appetizer · Drinks</span>
-  </div>
+  <div class="hero-sign" aria-hidden="true"><span class="hs-in"><span class="hs-t"><small>Rodízio</small><b>Todo<br>dia</b><small>😎</small></span></span></div>
 
-  <div class="hero-in">
-    <p class="hero-pre"><span class="marker">Só tem rodízio no DZE7?</span></p>
+  <div class="hero-in wrap">
+    <p class="hero-pre"><span class="chip live"><b class="live-dot"></b><span data-open-hud>Ter → Dom · 16h—23h</span></span><span class="marker">Só tem rodízio no DZE7?</span></p>
     <h1 class="hero-title">
       <span class="ht-line"><span class="ht-word">Rodízio</span></span>
       <span class="ht-line"><span class="ht-word y">todo dia.</span></span>
     </h1>
-    <p class="hero-sub">Burger artesanal à la carte ou na rodada sem fim. De terça a domingo, na Vila Formosa.</p>
-    <div class="hero-ctas">
-      <a href="#rodizio" class="btn btn-y">Entrar na rota</a>
-      <a href="#cardapio" class="btn">Ver cardápio</a>
+    <div class="hero-foot">
+      <p class="hero-sub">Burger artesanal à la carte ou na rodada sem fim. De terça a domingo, na Vila Formosa.</p>
+      <div class="hero-ctas">
+        <a href="#rodizio" class="btn btn-y">Entrar na rota</a>
+        <a href="#cardapio" class="btn btn-glass">Ver cardápio</a>
+      </div>
     </div>
   </div>
 
-  <div class="hero-sign" aria-hidden="true"><span class="hs-in"><span class="hs-t"><small>Rodízio</small><b>Todo<br>dia</b><small>😎</small></span></span></div>
-  <div class="plate" aria-hidden="true"><small>SÃO PAULO · BR</small><b>DESDE 2016</b></div>
-
-  <a href="#funciona" class="hero-scroll"><span>Role pra rodar</span> ↓</a>
+  <div class="hero-bar wrap" aria-hidden="true">
+    <span class="chip">📍 Rua Aracê, 139 · Vila Formosa</span>
+    <span class="chip">Burgers · Appetizer · Drinks</span>
+    <span class="chip plate-chip">Desde 2016</span>
+    <a href="#funciona" class="chip scroll-chip">Role pra rodar <i>↓</i></a>
+  </div>
 </section>
 
 <!-- ===== TICKER ===== -->
@@ -159,16 +159,26 @@
       <svg class="ticket-ic" aria-hidden="true"><use href="#burger"/></svg>
     </article>
   </div>
+  <div class="bento">
+    <div class="bx"><small>Na estrada desde</small><b data-count="2016">2016</b></div>
+    <div class="bx y"><small>Rodízio</small><b>Todo dia</b></div>
+    <div class="bx"><small>Terça a domingo</small><b>16h—23h</b></div>
+    <div class="bx red"><small>Delivery</small><b>Só no iFood</b></div>
+  </div>
 </section>
 
 <!-- ===== RODÍZIO (estrada horizontal) ===== -->
 <section class="road" id="rodizio">
   <div class="road-pin">
     <div class="road-sky" aria-hidden="true"><span class="road-sun"></span></div>
+    <div class="road-night" aria-hidden="true"></div>
+    <div class="road-stars" aria-hidden="true"></div>
+    <div class="road-far" aria-hidden="true"></div>
+    <div class="road-mid" aria-hidden="true"></div>
     <div class="road-head">
       <p class="tag">Placa 02 — O rodízio</p>
       <h2 class="h-xl">A Kombi<br><em class="y">não para.</em></h2>
-      <p class="lead">Role a página e veja a rodada passar. É assim na mesa: um burger atrás do outro, até você pedir arrego.</p>
+      <p class="lead">Um burger atrás do outro, até você pedir arrego. Role e acompanhe a rodada.</p>
     </div>
 
     <div class="road-hud" aria-hidden="true">
@@ -200,7 +210,7 @@
     </div>
 
     <div class="asphalt" aria-hidden="true"><i class="lane"></i></div>
-    <svg class="kombi" aria-hidden="true"></svg>
+    <div class="kombi-wrap" aria-hidden="true"><span class="beam"></span><svg class="kombi"></svg></div>
   </div>
 </section>
 
@@ -322,6 +332,7 @@
   </div>
 </footer>
 
-<script src="main.js?v=1" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
+<script src="main.js?v=2" defer></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 (() => {
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduce = !/[?&]motion=1/.test(location.search) && matchMedia('(prefers-reduced-motion: reduce)').matches;
   const fine = matchMedia('(hover:hover) and (pointer:fine)').matches;
   const pad = n => String(n).padStart(2, '0');
 
@@ -107,29 +107,37 @@
   function setTab(t) {
     tab = t;
     $$('.menu-tabs button').forEach(x => x.setAttribute('aria-selected', x.dataset.tab === t));
+    movePill();
     renderMenu();
   }
+  const tabs = $('.menu-tabs'), pill = document.createElement('span');
+  pill.className = 'tab-pill'; tabs.prepend(pill);
+  function movePill() {
+    const on = $('.menu-tabs button[aria-selected="true"]');
+    pill.style.width = on.offsetWidth + 'px'; pill.style.height = on.offsetHeight + 'px';
+    pill.style.transform = `translate(${on.offsetLeft}px,${on.offsetTop}px)`;
+  }
+  addEventListener('resize', movePill);
+  document.fonts && document.fonts.ready.then(movePill);
+  movePill();
   $$('.menu-tabs button').forEach(b => b.addEventListener('click', () => setTab(b.dataset.tab)));
   $$('[data-goto]').forEach(a => a.addEventListener('click', () => setTab(a.dataset.goto)));
   renderMenu();
 
   /* ================= peek: foto segue o cursor no cardápio ================= */
   const peek = $('.peek'), peekImg = peek.querySelector('img');
+  let mx = innerWidth / 2, my = innerHeight / 2;
+  addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
+  let peekOn = false, qx = 0, qy = 0;
   if (fine) {
-    let px = 0, py = 0, qx = 0, qy = 0, on = false;
     grid.addEventListener('pointerover', e => {
       const it = e.target.closest('[data-peek]');
-      if (it) { peekImg.src = it.dataset.peek; peek.classList.add('on'); on = true; }
+      if (it) { peekImg.src = it.dataset.peek; peek.classList.add('on'); peekOn = true; }
     });
     grid.addEventListener('pointerout', e => {
       const it = e.target.closest('[data-peek]');
-      if (it && !it.contains(e.relatedTarget)) { peek.classList.remove('on'); on = false; }
+      if (it && !it.contains(e.relatedTarget)) { peek.classList.remove('on'); peekOn = false; }
     });
-    addEventListener('pointermove', e => { px = e.clientX + 28; py = e.clientY - 80; });
-    (function loop() {
-      if (on) { qx += (px - qx) * .18; qy += (py - qy) * .18; peek.style.left = Math.min(qx, innerWidth - 240) + 'px'; peek.style.top = qy + 'px'; }
-      requestAnimationFrame(loop);
-    })();
   }
 
   /* ================= aberto agora (horário de São Paulo) ================= */
@@ -144,10 +152,34 @@
     const el = $('[data-open-now]');
     el.textContent = open ? 'Aberto agora · rodízio rolando' : 'Fechado agora · abre ter a dom, 16h';
     el.className = 'open-now ' + (open ? 'on' : 'off');
-    $('[data-open-hud]').textContent = open ? '● Aberto agora · até 23h' : 'Ter → Dom · 16h—23h';
+    $('[data-open-hud]').textContent = open ? 'Aberto agora · até 23h' : 'Fechado · ter a dom 16h—23h';
+    $('.chip.live').classList.toggle('off', !open);
   }
   updateOpen();
   setInterval(updateOpen, 60000);
+
+  /* ================= split de palavras nos títulos ================= */
+  function split(el) {
+    let i = 0;
+    const walk = node => {
+      [...node.childNodes].forEach(n => {
+        if (n.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach(w => {
+            if (!w) return;
+            if (/^\s+$/.test(w)) { frag.append(' '); return; }
+            const o = document.createElement('span'), s = document.createElement('span');
+            o.className = 'sw'; s.textContent = w; s.style.setProperty('--i', i++);
+            o.append(s); frag.append(o);
+          });
+          n.replaceWith(frag);
+        } else if (n.nodeType === 1 && n.tagName !== 'BR') walk(n);
+      });
+    };
+    walk(el);
+  }
+  const titles = $$('.h-xl, .h-lg, .menu-title, .marker.big');
+  if (!reduce) titles.forEach(split);
 
   /* ================= intro ================= */
   const intro = $('.intro');
@@ -159,10 +191,24 @@
     if (finished) return; finished = true;
     clearInterval(tickIntro); setP(1);
     setTimeout(() => { intro.classList.add('out'); document.body.classList.add('ready'); }, 380);
-    setTimeout(() => intro.remove(), 1400);
+    setTimeout(() => intro.remove(), 1500);
   };
   if (reduce) { intro.remove(); document.body.classList.add('ready'); }
   else { addEventListener('load', done); setTimeout(done, 2800); }
+
+  /* ================= smooth scroll (Lenis) ================= */
+  let lenis = null;
+  if (!reduce && window.Lenis) {
+    lenis = new Lenis({ lerp: .085, wheelMultiplier: 1, smoothWheel: true });
+    $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+      const id = a.getAttribute('href');
+      const target = id === '#top' ? 0 : $(id);
+      if (target === null) return;
+      e.preventDefault();
+      lenis.scrollTo(target, { offset: 0, duration: 1.6 });
+    }));
+  }
+  const goTo = y => lenis ? lenis.scrollTo(y, { immediate: true }) : scrollTo(0, y);
 
   /* ================= header / drawer ================= */
   const hdr = $('.hdr');
@@ -173,82 +219,160 @@
     burger.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
     drawer.classList.toggle('open', open);
     drawer.setAttribute('aria-hidden', !open);
+    if (lenis) open ? lenis.stop() : lenis.start();
   });
   $$('.drawer a').forEach(a => a.addEventListener('click', () => burger.click()));
 
-  /* ================= cursor ================= */
+  /* ================= cursor + botões magnéticos ================= */
   const cur = $('.cursor');
-  if (fine) {
-    let x = 0, y = 0, cx = 0, cy = 0;
-    addEventListener('pointermove', e => { x = e.clientX; y = e.clientY; });
-    (function loop() { cx += (x - cx) * .22; cy += (y - cy) * .22; cur.style.transform = `translate(${cx}px,${cy}px)`; requestAnimationFrame(loop); })();
-    document.addEventListener('pointerover', e => cur.classList.toggle('big', !!e.target.closest('a,button,.plate-card,.pola,.ticket')));
+  let cx = mx, cy = my;
+  if (fine) document.addEventListener('pointerover', e => cur.classList.toggle('big', !!e.target.closest('a,button,.plate-card,.pola,.ticket,.bx')));
+  if (fine && !reduce) {
+    $$('.btn, .hdr-cta, .deliv i').forEach(b => {
+      b.addEventListener('pointermove', e => {
+        const r = b.getBoundingClientRect();
+        b.style.translate = `${(e.clientX - r.left - r.width / 2) * .25}px ${(e.clientY - r.top - r.height / 2) * .35}px`;
+      });
+      b.addEventListener('pointerleave', () => { b.style.transition += ',translate .5s cubic-bezier(.16,1,.3,1)'; b.style.translate = '0 0'; setTimeout(() => b.style.transition = '', 500); });
+    });
   }
 
-  /* ================= scroll: header, hero parallax, estrada do rodízio ================= */
-  const road = $('.road'), pin = $('.road-pin'), track = $('.road-track'), heroImg = $('.hero-bg img');
+  /* ================= estrada do rodízio ================= */
+  const road = $('.road'), pin = $('.road-pin'), track = $('.road-track');
   const roundEl = $('[data-round]'), hungerEl = $('[data-hunger]'), hungerTxt = $('[data-hunger-txt]');
   // a Kombi da estrada é clonada inline para que as rodas possam girar com o scroll
-  const sym = $('#kombi'), kombi = $('.kombi');
+  const sym = $('#kombi'), kombi = $('.kombi'), kwrap = $('.kombi-wrap');
   kombi.setAttribute('viewBox', sym.getAttribute('viewBox'));
   kombi.innerHTML = sym.innerHTML;
-  const wheels = $$('.kombi .wheel'), lane = $('.lane');
+  const wheels = $$('.kombi .wheel'), lane = $('.lane'), sun = $('.road-sun');
+  const far = $('.road-far'), mid = $('.road-mid');
   const cards = $$('.plate-card');
-  let lastW = innerWidth;
   const stableH = () => fine ? innerHeight : (document.documentElement.clientHeight || innerHeight);
   function sizeRoad() {
     const extra = track.scrollWidth - innerWidth;
-    road.style.setProperty('--road-h', (stableH() + Math.max(extra, 0) * 1.1) + 'px');
+    road.style.setProperty('--road-h', (stableH() + Math.max(extra, 0) * 1.15) + 'px');
   }
-  function onScroll() {
-    const y = scrollY;
-    hdr.classList.toggle('solid', y > innerHeight * .6);
-    if (!reduce && fine && y < innerHeight) heroImg.parentElement.style.transform = `translateY(${y * .25}px)`;
+  let lastW = innerWidth;
+  addEventListener('resize', () => { if (innerWidth === lastW && !fine) return; lastW = innerWidth; sizeRoad(); });
+  addEventListener('load', sizeRoad);
+  sizeRoad();
 
-    const r = road.getBoundingClientRect();
-    const max = road.offsetHeight - innerHeight;
-    const p = Math.min(Math.max(-r.top / max, 0), 1);
-    const dist = p * (track.scrollWidth - innerWidth);
-    track.style.transform = `translateX(${-dist}px)`;
-    pin.style.setProperty('--rp', p);
+  /* ================= elementos com parallax ================= */
+  const heroBg = $('.hero-bg'), heroIn = $('.hero-in'), heroSign = $('.hero-sign');
+  const tickerTrack = $('.ticker-track'), ticker = $('.ticker');
+  const trip = $('.trip');
+  const par = [
+    ...$$('.pola').map((el, i) => ({ el, s: [.08, -.06, .1, -.04][i] })),
+    { el: $('.events-media img'), s: -.12, img: true },
+    { el: $('.ticket-ic'), s: .1 }, { el: $$('.ticket-ic')[1], s: .14 },
+  ];
+
+  /* ================= loop principal ================= */
+  let sy = scrollY, vel = 0, rp = 0, tickX = 0, lastRound = -1, lastT = performance.now();
+  function frame(t) {
+    const dt = Math.min((t - lastT) / 16.7, 3); lastT = t;
+    if (lenis) lenis.raf(t);
+    const y = scrollY, vh = innerHeight;
+    vel += ((y - sy) - vel) * .18; sy = y;
+
+    // header some ao descer rápido, volta ao subir
+    hdr.classList.toggle('solid', y > vh * .5);
+    hdr.classList.toggle('hide', y > vh && vel > 2 && !drawer.classList.contains('open'));
+    trip.style.setProperty('--trip', y / Math.max(document.documentElement.scrollHeight - vh, 1));
+
+    // cursor
+    if (fine) { cx += (mx - cx) * .2; cy += (my - cy) * .2; cur.style.transform = `translate(${cx}px,${cy}px)`; }
+    if (peekOn) { qx += (mx + 30 - qx) * .16; qy += (my - 90 - qy) * .16; peek.style.left = Math.min(qx, innerWidth - 250) + 'px'; peek.style.top = qy + 'px'; }
+
     if (!reduce) {
-      lane.style.setProperty('--lane', `${-(dist * 1.6) % 130}px`);
-      wheels.forEach(w => w.style.setProperty('--wheel', `${dist * 1.4}deg`));
+      // hero: zoom + deslocamento no scroll, leve parallax no mouse
+      if (y < vh * 1.2) {
+        const k = y / vh, ox = (mx / innerWidth - .5), oy = (my / vh - .5);
+        heroBg.style.transform = `translate3d(${ox * -18}px,${y * .3 + oy * -12}px,0) scale(${1.04 + k * .12})`;
+        heroIn.style.transform = `translate3d(0,${y * -.18}px,0)`;
+        heroIn.style.opacity = Math.max(1 - k * 1.3, 0);
+        heroSign.style.transform = `translate3d(${ox * 22}px,${y * -.35}px,0) rotate(${Math.max(Math.min(-vel * .6, 18), -18)}deg)`;
+      }
+      // ticker reage à velocidade
+      tickX -= (0.6 + Math.abs(vel) * .25) * dt;
+      const half = tickerTrack.scrollWidth / 2;
+      if (-tickX > half) tickX += half;
+      tickerTrack.style.transform = `translate3d(${tickX}px,0,0)`;
+      ticker.style.setProperty('--sk', `${Math.max(Math.min(vel * -.5, 12), -12)}deg`);
+
+      // parallax genérico
+      par.forEach(({ el, s, img }) => {
+        if (!el) return;
+        const r = el.getBoundingClientRect();
+        if (r.bottom < -200 || r.top > vh + 200) return;
+        const off = (r.top + r.height / 2 - vh / 2) * s;
+        if (img) el.style.transform = `translate3d(0,${off - 40}px,0)`; else el.style.translate = `0 ${off}px`;
+      });
+    } else {
+      tickerTrack.style.transform = 'none';
     }
-    // rodada atual = último card que já passou pela Kombi
-    const kx = innerWidth * .32;
-    let n = 0;
-    cards.forEach((c, i) => {
-      const b = c.getBoundingClientRect();
-      if (b.left < kx) n = i + 1;
-      // o burger que passa da Kombi é "comido": encolhe e some
-      const t = Math.min(Math.max((b.left + b.width / 2 - innerWidth * .12) / (innerWidth * .3), 0), 1);
-      c.style.opacity = t;
-      c.style.scale = .55 + .45 * t;
-    });
-    roundEl.textContent = pad(Math.max(n, 1));
-    const hunger = Math.round(100 * (1 - n / cards.length));
-    hungerEl.style.width = hunger + '%';
-    hungerTxt.textContent = hunger === 0 ? 'Missão cumprida' : hunger + '% com fome';
+
+    // estrada
+    const rr = road.getBoundingClientRect();
+    if (rr.bottom > 0 && rr.top < vh) {
+      const max = road.offsetHeight - vh;
+      const p = Math.min(Math.max(-rr.top / max, 0), 1);
+      rp += (p - rp) * (reduce ? 1 : .14);
+      const dist = rp * (track.scrollWidth - innerWidth);
+      track.style.transform = `translate3d(${-dist}px,0,0)`;
+      pin.style.setProperty('--night', Math.min(Math.max((rp - .25) / .6, 0), 1).toFixed(3));
+      if (!reduce) {
+        far.style.transform = `translate3d(${-(dist * .12) % 600}px,0,0)`;
+        mid.style.transform = `translate3d(${-(dist * .35) % 600}px,0,0)`;
+        sun.style.transform = `translate3d(${-rp * 14}vw,${rp * 22}vh,0)`;
+        lane.style.setProperty('--lane', `${-(dist * 1.6) % 130}px`);
+        wheels.forEach(w => w.style.setProperty('--wheel', `${dist * 1.4}deg`));
+        const tilt = Math.max(Math.min((p - rp) * -120, 5), -5);
+        kwrap.style.transform = `rotate(${tilt}deg) translateY(${Math.sin(t / 90) * (Math.abs(p - rp) > .001 ? 2 : .8)}px)`;
+      }
+      const kx = kwrap.getBoundingClientRect().right;
+      let n = 0;
+      cards.forEach((c, i) => {
+        const b = c.getBoundingClientRect();
+        if (b.left + b.width / 2 < kx) n = i + 1;
+        // o burger que passa pela Kombi é "comido": encolhe, gira e some
+        const tt = Math.min(Math.max((b.left + b.width / 2 - kx * .75) / (innerWidth * .28), 0), 1);
+        const sw = reduce ? 0 : Math.sin(t / 700 + i) * 1.6;
+        c.style.opacity = tt;
+        c.style.transform = `translate3d(0,${(1 - tt) * 40}px,0) rotate(${(i % 2 ? 2 : -2.5) + sw - (1 - tt) * 18}deg) scale(${.5 + .5 * tt})`;
+      });
+      if (n !== lastRound) {
+        lastRound = n;
+        roundEl.textContent = pad(Math.max(n, 1));
+        const hunger = Math.round(100 * (1 - n / cards.length));
+        hungerEl.style.width = Math.max(hunger, 2) + '%';
+        hungerTxt.textContent = hunger === 0 ? 'Missão cumprida' : hunger + '% com fome';
+        if (!reduce && n > 0) roundEl.animate([{ transform: 'scale(1.35)', color: '#8cff3a' }, { transform: 'none' }], { duration: 450, easing: 'cubic-bezier(.16,1,.3,1)' });
+      }
+    }
+    requestAnimationFrame(frame);
   }
-  addEventListener('scroll', onScroll, { passive: true });
-  addEventListener('resize', () => { if (innerWidth === lastW && !fine) return; lastW = innerWidth; sizeRoad(); onScroll(); });
-  addEventListener('load', () => { sizeRoad(); onScroll(); });
-  sizeRoad(); onScroll();
+  requestAnimationFrame(frame);
 
   /* ================= reveal ================= */
   const io = new IntersectionObserver(es => es.forEach(e => {
     if (!e.isIntersecting) return;
     e.target.classList.add('seen');
     io.unobserve(e.target);
-  }), { threshold: .2 });
-  $$('.how .h-xl, .how .lead, .casa .h-xl, .casa .lead, .stories, .events .h-xl, .events .lead, .delivery .deliv-row, .visit-col, .menu-title').forEach(el => { el.setAttribute('data-reveal', ''); io.observe(el); });
+  }), { threshold: .15, rootMargin: '0px 0px -8% 0px' });
+  titles.forEach(el => io.observe(el));
+  $$('.lead, .how-grid, .bento .bx, .stories, .deliv-row, .visit-col, .menu-tabs, .events-copy .btn').forEach((el, i) => {
+    el.setAttribute('data-reveal', '');
+    if (el.matches('.bx')) el.style.transitionDelay = (i % 4) * 90 + 'ms';
+    io.observe(el);
+  });
+  $$('.pola img, .events-media img').forEach(img => { img.classList.add('rv-img'); io.observe(img.closest('figure,.events-media')); });
   io.observe($('.visit'));
 
   /* ================= arrastar a estrada com o mouse ================= */
   let drag = null;
   track.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') return; drag = { x: e.clientX, y: scrollY }; track.style.cursor = 'grabbing'; });
-  addEventListener('pointermove', e => { if (!drag) return; scrollTo(0, drag.y - (e.clientX - drag.x) * 1.4); });
+  addEventListener('pointermove', e => { if (!drag) return; goTo(drag.y - (e.clientX - drag.x) * 1.6); });
   addEventListener('pointerup', () => { drag = null; track.style.cursor = ''; });
   track.addEventListener('dragstart', e => e.preventDefault());
 })();
