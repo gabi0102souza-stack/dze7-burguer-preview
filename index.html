@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DZE7 Burguer · Rodízio todo dia na Vila Formosa</title>
+<meta name="description" content="DZE7 Burguer: burgers, appetizer & drinks na Vila Formosa, São Paulo. À la carte ou rodízio de hambúrguer todos os dias, de terça a domingo, das 16h às 23h.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#141414">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Squada+One&family=Rubik:ital,wght@0,300;0,400;0,500;0,700;0,800;1,400&family=Permanent+Marker&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="img/menu/combo-familia.jpg">
+<link rel="stylesheet" href="styles.css?v=1">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="burger" viewBox="0 0 64 50">
+    <path d="M4 21C4 8.5 17 2 32 2s28 6.5 28 19c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3Z"/>
+    <rect x="1" y="27.5" width="62" height="8" rx="4"/>
+    <path d="M4 39h56v2.5c0 3.6-2.9 6.5-6.5 6.5h-43C6.9 48 4 45.1 4 41.5Z"/>
+  </symbol>
+  <symbol id="kombi" viewBox="0 0 300 190">
+    <!-- burger no bagageiro -->
+    <g class="k-roof">
+      <rect x="70" y="40" width="150" height="6" rx="3" fill="#2a2724"/>
+      <rect x="86" y="30" width="6" height="14" fill="#2a2724"/><rect x="198" y="30" width="6" height="14" fill="#2a2724"/>
+      <path d="M95 30c0-17 22-27 50-27s50 10 50 27c0 2-1.5 3-3 3H98c-1.5 0-3-1-3-3Z" fill="#e3a14b"/>
+      <circle cx="122" cy="14" r="2" fill="#f4efe4"/><circle cx="140" cy="9" r="2" fill="#f4efe4"/><circle cx="160" cy="12" r="2" fill="#f4efe4"/><circle cx="176" cy="18" r="2" fill="#f4efe4"/>
+      <path d="M92 33h106l-8 8H100Z" fill="#6fbf3a"/>
+      <rect x="90" y="34" width="110" height="7" rx="3.5" fill="#5a3320"/>
+      <path d="M100 33h90l-4 6h-82Z" fill="#f5b915"/>
+    </g>
+    <!-- carroceria -->
+    <path d="M30 60c2-8 9-14 18-14h196c16 0 26 8 30 22l10 44H22Z" fill="#efe3c6"/>
+    <path d="M22 112h264v28c0 7-5 12-12 12H30c-5 0-8-3-8-8Z" fill="#c1272d"/>
+    <path d="M284 112l-10-44c-1-4-3-8-6-11l-24 55Z" fill="#c1272d"/>
+    <path d="M22 110h264" stroke="#d9d0bd" stroke-width="3"/>
+    <rect x="44" y="60" width="44" height="34" rx="6" fill="#1d1b19"/>
+    <rect x="96" y="60" width="44" height="34" rx="6" fill="#1d1b19"/>
+    <rect x="148" y="60" width="44" height="34" rx="6" fill="#1d1b19"/>
+    <path d="M200 60c0-3 3-6 6-6h30c3 0 6 3 6 6v34h-42Z" fill="#1d1b19"/>
+    <path d="M250 58h12c4 0 7 3 8 6l7 30h-27Z" fill="#1d1b19"/>
+    <path d="M52 64h10l-12 24v-18c0-3 1-6 2-6ZM104 64h10l-12 24v-18c0-3 1-6 2-6ZM156 64h10l-12 24v-18c0-3 1-6 2-6Z" fill="#fff" opacity=".12"/>
+    <rect x="203" y="100" width="36" height="46" rx="3" fill="none" stroke="#8e1b22" stroke-width="2"/>
+    <text x="70" y="137" font-family="Squada One, Arial Narrow, sans-serif" font-size="22" fill="#efe3c6" letter-spacing="2">DZE7</text>
+    <circle cx="281" cy="122" r="6" fill="#f5b915"/>
+    <rect x="12" y="146" width="20" height="7" rx="3" fill="#bdb5a5"/>
+    <rect x="270" y="146" width="22" height="7" rx="3" fill="#bdb5a5"/>
+    <g class="wheel" style="transform-origin:76px 152px"><circle cx="76" cy="152" r="24" fill="#141414"/><circle cx="76" cy="152" r="11" fill="#efe3c6"/><path d="M76 141v22M65 152h22" stroke="#141414" stroke-width="3"/></g>
+    <g class="wheel" style="transform-origin:236px 152px"><circle cx="236" cy="152" r="24" fill="#141414"/><circle cx="236" cy="152" r="11" fill="#efe3c6"/><path d="M236 141v22M225 152h22" stroke="#141414" stroke-width="3"/></g>
+  </symbol>
+</svg>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="cursor" aria-hidden="true"></div>
+<div class="peek" aria-hidden="true"><img alt=""></div>
+
+<!-- ===== INTRO ===== -->
+<div class="intro" aria-hidden="true">
+  <div class="intro-sign"><span>DZE7</span></div>
+  <div class="intro-road"><svg class="intro-kombi"><use href="#kombi"/></svg><i></i></div>
+  <p class="intro-txt">Ligando a Kombi<span class="dots"></span></p>
+</div>
+
+<!-- ===== HEADER ===== -->
+<header class="hdr">
+  <a href="#top" class="logo" aria-label="DZE7 Burguer">
+    <svg class="logo-ic" aria-hidden="true"><use href="#burger"/></svg>
+    <span class="logo-w">DZE7</span>
+    <span class="logo-t">Burgers · Appetizer · Drinks</span>
+  </a>
+  <nav class="hdr-nav" aria-label="Menu">
+    <a href="#funciona">Como funciona</a>
+    <a href="#rodizio">Rodízio</a>
+    <a href="#cardapio">Cardápio</a>
+    <a href="#casa">A casa</a>
+    <a href="#visite">Visite</a>
+  </nav>
+  <a class="hdr-cta" href="https://www.ifood.com.br/busca?q=dze7%20burguer" target="_blank" rel="noopener">Delivery <span aria-hidden="true">↗</span></a>
+  <button class="hdr-burger" type="button" aria-label="Abrir menu" aria-expanded="false"><i></i><i></i></button>
+</header>
+
+<div class="drawer" aria-hidden="true">
+  <a href="#funciona">Como funciona</a>
+  <a href="#rodizio">Rodízio</a>
+  <a href="#cardapio">Cardápio</a>
+  <a href="#casa">A casa</a>
+  <a href="#delivery">Delivery</a>
+  <a href="#visite">Visite</a>
+  <p class="drawer-foot">Rua Aracê, 139 · Vila Formosa · SP<br>Ter a Dom · 16h às 23h</p>
+</div>
+
+<main id="top">
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-bg"><img src="img/menu/combo-familia.jpg" alt="" fetchpriority="high"></div>
+  <div class="hero-shade"></div>
+
+  <div class="hero-hud" aria-hidden="true">
+    <span class="hud-km"><b class="hud-dot"></b>Rota DZE7 · KM 139</span>
+    <span data-open-hud>Ter → Dom · 16h—23h</span>
+    <span class="dim">Vila Formosa · Zona Leste · SP</span>
+    <span class="dim">Burgers · Appetizer · Drinks</span>
+  </div>
+
+  <div class="hero-in">
+    <p class="hero-pre"><span class="marker">Só tem rodízio no DZE7?</span></p>
+    <h1 class="hero-title">
+      <span class="ht-line"><span class="ht-word">Rodízio</span></span>
+      <span class="ht-line"><span class="ht-word y">todo dia.</span></span>
+    </h1>
+    <p class="hero-sub">Burger artesanal à la carte ou na rodada sem fim. De terça a domingo, na Vila Formosa.</p>
+    <div class="hero-ctas">
+      <a href="#rodizio" class="btn btn-y">Entrar na rota</a>
+      <a href="#cardapio" class="btn">Ver cardápio</a>
+    </div>
+  </div>
+
+  <div class="hero-sign" aria-hidden="true"><span class="hs-in"><span class="hs-t"><small>Rodízio</small><b>Todo<br>dia</b><small>😎</small></span></span></div>
+  <div class="plate" aria-hidden="true"><small>SÃO PAULO · BR</small><b>DESDE 2016</b></div>
+
+  <a href="#funciona" class="hero-scroll"><span>Role pra rodar</span> ↓</a>
+</section>
+
+<!-- ===== TICKER ===== -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span>RODÍZIO TODOS OS DIAS ✦ BURGERS · APPETIZER · DRINKS ✦ VILA FORMOSA ✦ DESDE 2016 ✦ TER A DOM 16H ÀS 23H ✦ DELIVERY SÓ NO IFOOD ✦ </span>
+    <span>RODÍZIO TODOS OS DIAS ✦ BURGERS · APPETIZER · DRINKS ✦ VILA FORMOSA ✦ DESDE 2016 ✦ TER A DOM 16H ÀS 23H ✦ DELIVERY SÓ NO IFOOD ✦ </span>
+  </div>
+</div>
+
+<!-- ===== COMO FUNCIONA ===== -->
+<section class="how" id="funciona">
+  <div class="how-head">
+    <p class="tag">Placa 01 — Como o DZE7 funciona?</p>
+    <h2 class="h-xl">Duas estradas.<br><em class="y">Uma fome só.</em></h2>
+    <p class="lead">Chegou na casa, escolhe o caminho: monta o pedido no cardápio tradicional ou libera a rodada e deixa os burgers virem até você.</p>
+  </div>
+  <div class="how-grid">
+    <article class="ticket">
+      <span class="ticket-n">1</span>
+      <p class="ticket-k">Opção 01</p>
+      <h3>À la carte</h3>
+      <p>O cardápio tradicional: burgers Angus de 170g, os clássicos de 100g, porções pra dividir, shakes e docinhos. Cada um no seu ritmo.</p>
+      <a href="#cardapio" class="ticket-go">Abrir cardápio →</a>
+      <svg class="ticket-ic" aria-hidden="true"><use href="#burger"/></svg>
+    </article>
+    <article class="ticket red">
+      <span class="ticket-n">2</span>
+      <p class="ticket-k">Opção 02</p>
+      <h3>Rodízio</h3>
+      <p>Os burgers vão chegando à mesa, rodada após rodada. Todo dia que a casa está aberta. Preço e regras do rodízio nos destaques do Instagram.</p>
+      <a href="#rodizio" class="ticket-go">Ver a rodada →</a>
+      <svg class="ticket-ic" aria-hidden="true"><use href="#burger"/></svg>
+    </article>
+  </div>
+</section>
+
+<!-- ===== RODÍZIO (estrada horizontal) ===== -->
+<section class="road" id="rodizio">
+  <div class="road-pin">
+    <div class="road-sky" aria-hidden="true"><span class="road-sun"></span></div>
+    <div class="road-head">
+      <p class="tag">Placa 02 — O rodízio</p>
+      <h2 class="h-xl">A Kombi<br><em class="y">não para.</em></h2>
+      <p class="lead">Role a página e veja a rodada passar. É assim na mesa: um burger atrás do outro, até você pedir arrego.</p>
+    </div>
+
+    <div class="road-hud" aria-hidden="true">
+      <div class="rh-round"><small>Rodada</small><b data-round>01</b><small>/12</small></div>
+      <div class="rh-meter">
+        <small>Fome-ômetro</small>
+        <div class="rh-bar"><span data-hunger></span></div>
+        <small class="rh-pct" data-hunger-txt>100% com fome</small>
+      </div>
+    </div>
+
+    <div class="road-track">
+      <figure class="plate-card c1"><img src="img/menu/monstrinho.jpg" alt="" decoding="async"><figcaption><b>01</b> Monstrinho</figcaption></figure>
+      <figure class="plate-card c2"><img src="img/menu/bambino.jpg" alt="" decoding="async"><figcaption><b>02</b> Bambino</figcaption></figure>
+      <figure class="plate-card c3"><img src="img/menu/costelin.jpg" alt="" decoding="async"><figcaption><b>03</b> Costelin</figcaption></figure>
+      <figure class="plate-card c4"><img src="img/menu/dragonball.jpg" alt="" decoding="async"><figcaption><b>04</b> Dragon Ball</figcaption></figure>
+      <figure class="plate-card c1"><img src="img/menu/dze7.jpg" alt="" decoding="async"><figcaption><b>05</b> DZE7</figcaption></figure>
+      <figure class="plate-card c2"><img src="img/menu/belezura.jpg" alt="" decoding="async"><figcaption><b>06</b> Belezura</figcaption></figure>
+      <figure class="plate-card c3"><img src="img/menu/mcdoni.jpg" alt="" decoding="async"><figcaption><b>07</b> McDoni</figcaption></figure>
+      <figure class="plate-card c4"><img src="img/menu/trio.jpg" alt="" decoding="async"><figcaption><b>08</b> Trio Clocante</figcaption></figure>
+      <figure class="plate-card c1"><img src="img/menu/juninho.jpg" alt="" decoding="async"><figcaption><b>09</b> Juninho</figcaption></figure>
+      <figure class="plate-card c2"><img src="img/menu/vegeta.jpg" alt="" decoding="async"><figcaption><b>10</b> Vegeta</figcaption></figure>
+      <figure class="plate-card c3"><img src="img/menu/bolinhas.jpg" alt="" decoding="async"><figcaption><b>11</b> Bolinhas Serelepes</figcaption></figure>
+      <figure class="plate-card c4"><img src="img/menu/monstrinho-duplo.jpg" alt="" decoding="async"><figcaption><b>12</b> Monstrinho Duplo</figcaption></figure>
+      <div class="road-end">
+        <div class="end-sign"><span>Aguenta<br>mais uma?</span></div>
+        <a href="#visite" class="btn btn-y">Bora pra mesa</a>
+      </div>
+    </div>
+
+    <div class="asphalt" aria-hidden="true"><i class="lane"></i></div>
+    <svg class="kombi" aria-hidden="true"></svg>
+  </div>
+</section>
+
+<!-- ===== CARDÁPIO ===== -->
+<section class="menu" id="cardapio">
+  <div class="menu-frame">
+    <div class="menu-top">
+      <span class="logo dark" aria-hidden="true">
+        <svg class="logo-ic"><use href="#burger"/></svg>
+        <span class="logo-w">DZE7</span>
+        <span class="logo-t">Burgers · Appetizer · Drinks</span>
+      </span>
+      <p class="menu-stamp">À la carte<br><span>Vila Formosa · SP</span></p>
+    </div>
+    <h2 class="menu-title">Cardápio</h2>
+    <div class="menu-tabs" role="tablist" aria-label="Categorias do cardápio">
+      <button role="tab" aria-selected="true" data-tab="casa">Burgers da casa</button>
+      <button role="tab" aria-selected="false" data-tab="classicos">Burgers 100g</button>
+      <button role="tab" aria-selected="false" data-tab="porcoes">Porções</button>
+      <button role="tab" aria-selected="false" data-tab="combos">Combos</button>
+      <button role="tab" aria-selected="false" data-tab="doces">Shakes &amp; doces</button>
+      <button role="tab" aria-selected="false" data-tab="bebidas">Bebidas</button>
+    </div>
+    <p class="menu-note" data-menu-note></p>
+    <div class="menu-grid" data-menu></div>
+    <div class="menu-foot">
+      <p>Preços do cardápio digital da casa. Podem mudar sem aviso; confira na hora do pedido.</p>
+      <a href="https://dze7.com.br/menu" class="btn btn-ink" target="_blank" rel="noopener">Cardápio digital ↗</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== A CASA ===== -->
+<section class="casa" id="casa">
+  <div class="casa-copy">
+    <p class="tag">Placa 03 — A casa</p>
+    <h2 class="h-xl">Kombi, boné vermelho<br><em class="y">e camisa florida.</em></h2>
+    <p class="lead">Parede vermelha, mesa de madeira, placa amarela de estrada pintada no muro e um time que trabalha de camisa estampada. O DZE7 é hamburgueria de bairro com cara de viagem de férias.</p>
+    <ul class="stories" aria-label="Destaques">
+      <li><a href="#rodizio"><span class="st-ring"><img src="img/menu/monstrinho.jpg" alt=""></span>Rodízio</a></li>
+      <li><a href="#cardapio"><span class="st-ring"><img src="img/menu/bambino.jpg" alt=""></span>Burgers</a></li>
+      <li><a href="#cardapio" data-goto="porcoes"><span class="st-ring"><img src="img/menu/fritas-galaxias.jpg" alt=""></span>Porções</a></li>
+      <li><a href="#cardapio" data-goto="doces"><span class="st-ring"><img src="img/menu/milkshake.jpg" alt=""></span>Sobremesas</a></li>
+      <li><a href="#delivery"><span class="st-ring"><img src="img/menu/combo-2.jpg" alt=""></span>Delivery</a></li>
+      <li><a href="#eventos"><span class="st-ring"><img src="img/ig/mural.jpg" alt=""></span>Eventos</a></li>
+    </ul>
+  </div>
+  <div class="casa-wall">
+    <figure class="pola p1"><img src="img/ig/crew.jpg" alt="Equipe do DZE7 de boné vermelho e camisa florida" loading="lazy"><figcaption>A tripulação</figcaption><i class="tape"></i></figure>
+    <figure class="pola p2"><img src="img/ig/kombi.jpg" alt="Ilustração da Kombi do DZE7 com placa Desde 2016" loading="lazy"><figcaption>Desde 2016</figcaption><i class="tape"></i></figure>
+    <figure class="pola p3"><img src="img/ig/mural.jpg" alt="Mesa com burgers em frente ao mural com placa DZE7" loading="lazy"><figcaption>O mural</figcaption></figure>
+    <figure class="pola p4"><img src="img/ig/bambino-mesa.jpg" alt="Burger Bambino na tábua de madeira" loading="lazy"><figcaption>Na tábua</figcaption><i class="tape"></i></figure>
+  </div>
+</section>
+
+<!-- ===== EVENTOS ===== -->
+<section class="events" id="eventos">
+  <div class="events-media">
+    <img src="img/ig/rodizio.jpg" alt="Mesa do rodízio do DZE7 com burgers e chopes" loading="lazy">
+    <span class="events-stamp">Mesa grande?<br>A gente roda.</span>
+  </div>
+  <div class="events-copy">
+    <p class="tag">Placa 04 — Eventos &amp; espaço</p>
+    <h2 class="h-xl">Aniversário,<br>firma, <em class="y">galera.</em></h2>
+    <p class="lead">Rodízio é programa de grupo. Quer reunir a turma no salão? Manda um direct contando a data e quantas pessoas, que a casa te responde com o que dá pra fazer.</p>
+    <a class="btn btn-y" href="https://ig.me/m/dze7burguer" target="_blank" rel="noopener">Chamar no direct ↗</a>
+  </div>
+</section>
+
+<!-- ===== DELIVERY ===== -->
+<section class="delivery" id="delivery">
+  <p class="marker big">Bateu a fome?</p>
+  <div class="deliv-row">
+    <a href="https://www.ifood.com.br/busca?q=dze7%20burguer" target="_blank" rel="noopener" class="deliv">
+      <small>Delivery</small><b>Só no iFood</b><i>↗</i>
+    </a>
+    <a href="https://dze7.com.br/menu" target="_blank" rel="noopener" class="deliv y">
+      <small>Retirada</small><b>Com desconto</b><i>↗</i>
+    </a>
+  </div>
+  <p class="deliv-note">Retirada pelo cardápio digital da casa, com desconto. Combo família, combo dia de chuva e o 2 por R$ 39,99 estão lá.</p>
+</section>
+
+<!-- ===== VISITE ===== -->
+<section class="visit" id="visite">
+  <svg class="visit-kombi" aria-hidden="true"><use href="#kombi"/></svg>
+  <div class="visit-grid">
+    <div class="visit-col">
+      <p class="tag">Placa 05 — Destino final</p>
+      <h2 class="h-lg">Rua Aracê, 139</h2>
+      <p class="lead">Vila Formosa · São Paulo/SP · 03362-040</p>
+      <a class="btn" href="https://www.google.com/maps/search/?api=1&query=DZE7+Burguer+Rua+Arac%C3%AA+139+Vila+Formosa+S%C3%A3o+Paulo" target="_blank" rel="noopener">Como chegar ↗</a>
+    </div>
+    <div class="visit-col">
+      <p class="tag">Horários</p>
+      <table class="hours">
+        <tr><th>Segunda</th><td>Fechado</td></tr>
+        <tr><th>Terça a domingo</th><td>16H—23H</td></tr>
+        <tr><th>Rodízio</th><td>Todos os dias</td></tr>
+      </table>
+      <p class="open-now" data-open-now></p>
+    </div>
+    <div class="visit-col">
+      <p class="tag">Fala com a gente</p>
+      <a class="btn btn-y" href="https://www.instagram.com/dze7burguer/" target="_blank" rel="noopener">@dze7burguer ↗</a>
+      <p class="pay">Formas de pagamento, cardápio do rodízio e novidades ficam nos destaques do Instagram.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="ftr">
+  <p class="ftr-big" aria-hidden="true"><svg><use href="#burger"/></svg>DZE7</p>
+  <div class="ftr-row">
+    <p>© 2016—2026 DZE7 Burguer · <a href="https://www.instagram.com/dze7burguer/" target="_blank" rel="noopener">@dze7burguer</a></p>
+    <p class="ftr-note">Conceito de site para apresentação. Fotos do Instagram e do cardápio digital da casa.</p>
+    <a href="#top" class="ftr-top">Topo ↑</a>
+  </div>
+</footer>
+
+<script src="main.js?v=1" defer></script>
+</body>
+</html>
